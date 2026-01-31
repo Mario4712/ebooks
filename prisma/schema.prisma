@@ -1,0 +1,263 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum EbookStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+  CRYPTO
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  cpf           String?   @unique
+  phone         String?
+  role          Role      @default(USER)
+  newsletter    Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  orders        Order[]
+  reviews       Review[]
+  favorites     Favorite[]
+  downloads     Download[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Ebook {
+  id               String      @id @default(cuid())
+  title            String
+  slug             String      @unique
+  author           String
+  description      String
+  shortDescription String?
+  price            Float
+  originalPrice    Float?
+  coverUrl         String?
+  previewUrl       String?
+  pdfUrl           String?
+  epubUrl          String?
+  mobiUrl          String?
+  category         String
+  tags             String[]
+  pages            Int?
+  language         String      @default("pt-BR")
+  isbn             String?
+  publisher        String?
+  publishedDate    DateTime?
+  status           EbookStatus @default(DRAFT)
+  featured         Boolean     @default(false)
+  salesCount       Int         @default(0)
+  avgRating        Float       @default(0)
+  reviewCount      Int         @default(0)
+  metaTitle        String?
+  metaDescription  String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  orderItems       OrderItem[]
+  reviews          Review[]
+  favorites        Favorite[]
+
+  @@index([category])
+  @@index([status])
+  @@index([featured])
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  userId        String
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod?
+  paymentId     String?
+  total         Float
+  discount      Float         @default(0)
+  couponId      String?
+  customerEmail String?
+  customerName  String?
+  customerCpf   String?
+  metadata      Json?
+  paidAt             DateTime?
+  abandonedEmailSent Boolean       @default(false)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  user          User          @relation(fields: [userId], references: [id])
+  coupon        Coupon?       @relation(fields: [couponId], references: [id])
+  items         OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  ebookId String
+  price   Float
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  ebook   Ebook  @relation(fields: [ebookId], references: [id])
+
+  @@index([orderId])
+  @@index([ebookId])
+}
+
+model Download {
+  id        String   @id @default(cuid())
+  userId    String
+  ebookId   String
+  format    String
+  ip        String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([ebookId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  ebookId   String
+  rating    Int
+  comment   String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  ebook     Ebook    @relation(fields: [ebookId], references: [id])
+
+  @@index([ebookId, approved])
+  @@index([userId])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  ebookId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, ebookId])
+}
+
+model Coupon {
+  id            String       @id @default(cuid())
+  code          String       @unique
+  discountType  DiscountType
+  discountValue Float
+  minPurchase   Float?
+  maxUses       Int?
+  usedCount     Int          @default(0)
+  active        Boolean      @default(true)
+  expiresAt     DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  orders        Order[]
+  usages        CouponUsage[]
+}
+
+model CouponUsage {
+  id        String   @id @default(cuid())
+  couponId  String
+  userId    String
+  orderId   String
+  createdAt DateTime @default(now())
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+
+  @@unique([couponId, userId])
+}
+
+model HotmartAd {
+  id          String        @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String?
+  targetUrl   String
+  position    String
+  active      Boolean       @default(true)
+  clickCount  Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  clicks      HotmartClick[]
+}
+
+model HotmartClick {
+  id        String    @id @default(cuid())
+  adId      String
+  ip        String?
+  userAgent String?
+  referer   String?
+  createdAt DateTime  @default(now())
+  ad        HotmartAd @relation(fields: [adId], references: [id], onDelete: Cascade)
+
+  @@index([adId])
+}
