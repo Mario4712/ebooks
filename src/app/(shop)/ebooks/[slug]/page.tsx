@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { EbookDetail } from "@/components/ebooks/EbookDetail"
 import { EbookTabs } from "@/components/ebooks/EbookTabs"
 import { RelatedEbooks } from "@/components/ebooks/RelatedEbooks"
+import { HotmartSidebar } from "@/components/marketing/HotmartSidebar"
 
 export const dynamic = "force-dynamic"
 
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: ebook.metaTitle || ebook.title,
-    description: ebook.metaDescription || ebook.shortDescription || `Compre ${ebook.title} na Livraria Digital`,
+    description: ebook.metaDescription || ebook.shortDescription || `Compre ${ebook.title} na 筆言葉 Fude kotoba`,
     openGraph: {
       title: ebook.metaTitle || ebook.title,
       description: ebook.metaDescription || ebook.shortDescription || undefined,
@@ -68,6 +69,7 @@ export default async function EbookDetailPage({ params }: Props) {
       />
       <EbookDetail ebook={ebook} />
       <EbookTabs ebook={ebook} />
+      <HotmartSidebar />
       <RelatedEbooks currentId={ebook.id} category={ebook.category} />
     </div>
   )

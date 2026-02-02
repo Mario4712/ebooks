@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { PixPayment } from "./PixPayment"
+import { Gift } from "lucide-react"
 
 interface PaymentStepProps {
   onSuccess: (orderId: string) => void
@@ -14,11 +15,13 @@ interface PaymentStepProps {
 }
 
 export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
-  const { items, couponCode, clearCart } = useCartStore()
+  const { items, couponCode, clearCart, total } = useCartStore()
   const [loading, setLoading] = useState(false)
   const [pixData, setPixData] = useState<{ orderId: string; qrCode: string; qrCodeBase64: string } | null>(null)
 
-  async function handlePayment(method: "PIX" | "CREDIT_CARD" | "CRYPTO") {
+  const cartTotal = total()
+
+  async function handlePayment(method: "PIX" | "CREDIT_CARD" | "CRYPTO" | "FREE_COUPON") {
     setLoading(true)
     try {
       const res = await fetch("/api/checkout", {
@@ -38,6 +41,10 @@ export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
       }
 
       switch (method) {
+        case "FREE_COUPON":
+          clearCart()
+          onSuccess(data.orderId)
+          break
         case "PIX":
           setPixData({
             orderId: data.orderId,
@@ -80,6 +87,35 @@ export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
     )
   }
 
+  if (cartTotal === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Pedido Gratuito</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-6 rounded-lg text-center">
+            <Gift className="h-12 w-12 text-green-600 dark:text-green-400 mx-auto mb-3" />
+            <p className="text-lg font-semibold text-green-700 dark:text-green-400">
+              Seu pedido e 100% gratis!
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              O cupom aplicado cobre o valor total. Nenhum pagamento sera processado.
+            </p>
+          </div>
+          <Button
+            onClick={() => handlePayment("FREE_COUPON")}
+            disabled={loading}
+            className="w-full cta-gradient text-white border-0"
+            size="lg"
+          >
+            {loading ? "Processando..." : "Finalizar Pedido Gratuito"}
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -89,13 +125,13 @@ export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
         <Tabs defaultValue="pix">
           <TabsList className="w-full">
             <TabsTrigger value="pix" className="flex-1">PIX</TabsTrigger>
-            <TabsTrigger value="card" className="flex-1">Cartão</TabsTrigger>
+            <TabsTrigger value="card" className="flex-1">Cartao</TabsTrigger>
             <TabsTrigger value="crypto" className="flex-1">Crypto</TabsTrigger>
           </TabsList>
 
           <TabsContent value="pix" className="mt-4 space-y-4">
             <p className="text-sm text-muted-foreground">
-              Pague instantaneamente via PIX. O QR code será gerado após confirmar.
+              Pague instantaneamente via PIX. O QR code sera gerado apos confirmar.
             </p>
             <Button onClick={() => handlePayment("PIX")} disabled={loading} className="w-full">
               {loading ? "Gerando PIX..." : "Pagar com PIX"}
@@ -104,10 +140,10 @@ export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
 
           <TabsContent value="card" className="mt-4 space-y-4">
             <p className="text-sm text-muted-foreground">
-              Pagamento com cartão de crédito processado pelo Mercado Pago. Parcelamento disponível.
+              Pagamento com cartao de credito processado pelo Mercado Pago. Parcelamento disponivel.
             </p>
             <Button onClick={() => handlePayment("CREDIT_CARD")} disabled={loading} className="w-full">
-              {loading ? "Processando..." : "Pagar com Cartão"}
+              {loading ? "Processando..." : "Pagar com Cartao"}
             </Button>
           </TabsContent>
 

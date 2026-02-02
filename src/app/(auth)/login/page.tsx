@@ -2,8 +2,8 @@ import { Suspense } from "react"
 import { LoginForm } from "@/components/auth/LoginForm"
 
 export const metadata = {
-  title: "Login | Livraria Digital",
-  description: "Faça login na sua conta da Livraria Digital",
+  title: "Login | 筆言葉 Fude kotoba",
+  description: "Faça login na sua conta da 筆言葉 Fude kotoba",
 }
 
 export default function LoginPage() {

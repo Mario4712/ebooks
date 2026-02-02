@@ -1,8 +1,8 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Termos de Uso | Livraria Digital",
-  description: "Termos de Uso da Livraria Digital - Condições de uso da plataforma.",
+  title: "Termos de Uso | 筆言葉 Fude kotoba",
+  description: "Termos de Uso da 筆言葉 Fude kotoba - Condições de uso da plataforma.",
 }
 
 export default function TermosPage() {
@@ -15,7 +15,7 @@ export default function TermosPage() {
         <section>
           <h2 className="font-serif text-2xl font-bold mb-3">1. Aceitação dos Termos</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Ao acessar e utilizar a Livraria Digital, você concorda com estes Termos de Uso.
+            Ao acessar e utilizar a 筆言葉 Fude kotoba, você concorda com estes Termos de Uso.
             Se não concordar com algum dos termos, não utilize nossa plataforma. O uso continuado
             do site após alterações nestes termos implica aceitação das modificações.
           </p>
@@ -85,7 +85,7 @@ export default function TermosPage() {
           <p className="text-muted-foreground leading-relaxed">
             Usuários que adquiriram um e-book podem publicar avaliações. As avaliações
             passam por moderação e podem ser removidas caso contenham conteúdo ofensivo,
-            spam, informações falsas ou violem direitos de terceiros. A Livraria Digital
+            spam, informações falsas ou violem direitos de terceiros. A 筆言葉 Fude kotoba
             reserva-se o direito de aprovar ou rejeitar avaliações.
           </p>
         </section>
@@ -103,7 +103,7 @@ export default function TermosPage() {
         <section>
           <h2 className="font-serif text-2xl font-bold mb-3">9. Limitação de Responsabilidade</h2>
           <p className="text-muted-foreground leading-relaxed">
-            A Livraria Digital não se responsabiliza por: danos decorrentes do uso ou
+            A 筆言葉 Fude kotoba não se responsabiliza por: danos decorrentes do uso ou
             impossibilidade de uso da plataforma; interrupções temporárias do serviço;
             conteúdo de links externos ou materiais de parceiros afiliados; decisões
             tomadas com base no conteúdo dos e-books.

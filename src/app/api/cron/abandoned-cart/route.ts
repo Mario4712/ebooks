@@ -40,7 +40,7 @@ export async function GET(request: Request) {
         }))
 
         await resend.emails.send({
-          from: `Livraria Digital <${process.env.EMAIL_FROM || "noreply@livrariadigital.com"}>`,
+          from: `筆言葉 Fude kotoba <${process.env.EMAIL_FROM || "noreply@livrariadigital.com"}>`,
           to: order.user.email,
           subject: "Você esqueceu algo no carrinho!",
           react: AbandonedCart({

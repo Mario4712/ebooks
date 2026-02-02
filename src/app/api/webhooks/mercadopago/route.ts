@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     } else if (paymentData.status === "rejected") {
       await prisma.order.update({
         where: { id: orderId },
-        data: { status: "FAILED" },
+        data: { status: "CANCELLED" },
       })
     }
 

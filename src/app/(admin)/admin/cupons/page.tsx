@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { formatPrice } from "@/lib/utils"
 import { Plus } from "lucide-react"
 import Link from "next/link"
+import { CouponActions } from "@/components/admin/CouponActions"
 
 export const dynamic = "force-dynamic"
 
@@ -22,11 +23,12 @@ export default async function AdminCouponsPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Código</TableHead>
+            <TableHead>Codigo</TableHead>
             <TableHead>Tipo</TableHead>
             <TableHead>Desconto</TableHead>
             <TableHead>Uso</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Acoes</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -39,6 +41,9 @@ export default async function AdminCouponsPage() {
               </TableCell>
               <TableCell>{coupon.usedCount}{coupon.maxUses ? `/${coupon.maxUses}` : ""}</TableCell>
               <TableCell><Badge variant={coupon.active ? "default" : "secondary"}>{coupon.active ? "Ativo" : "Inativo"}</Badge></TableCell>
+              <TableCell>
+                <CouponActions couponId={coupon.id} active={coupon.active} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

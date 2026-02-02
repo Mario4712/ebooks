@@ -3,8 +3,8 @@ import { BookOpen, Shield, Zap, Users } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 
 export const metadata: Metadata = {
-  title: "Sobre Nós | Livraria Digital",
-  description: "Conheça a Livraria Digital - sua plataforma de e-books com os melhores títulos em português.",
+  title: "Sobre Nós | 筆言葉 Fude kotoba",
+  description: "Conheça a 筆言葉 Fude kotoba - sua plataforma de e-books com os melhores títulos em português.",
 }
 
 const values = [
@@ -33,11 +33,11 @@ const values = [
 export default function SobrePage() {
   return (
     <div className="container mx-auto px-4 py-16 max-w-4xl">
-      <h1 className="font-serif text-4xl font-bold mb-6">Sobre a Livraria Digital</h1>
+      <h1 className="font-serif text-4xl font-bold mb-6">Sobre a 筆言葉 Fude kotoba</h1>
 
       <div className="prose prose-gray max-w-none mb-12">
         <p className="text-lg text-muted-foreground leading-relaxed">
-          A Livraria Digital nasceu com a missão de democratizar o acesso ao conhecimento de
+          A 筆言葉 Fude kotoba nasceu com a missão de democratizar o acesso ao conhecimento de
           qualidade em língua portuguesa. Somos uma plataforma especializada em e-books que
           cobre as áreas mais relevantes para o desenvolvimento pessoal e profissional.
         </p>

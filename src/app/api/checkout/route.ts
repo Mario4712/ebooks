@@ -8,6 +8,7 @@ import { createCryptoPayment } from "@/lib/payments/crypto"
 import { processSuccessfulPayment } from "@/lib/payment-actions"
 
 export async function POST(request: Request) {
+  let order: { id: string } | null = null
   try {
     const session = await auth()
     if (!session?.user?.id) {
@@ -52,8 +53,39 @@ export async function POST(request: Request) {
 
     const total = Math.max(0, subtotal - discount)
 
+    // Free order path: coupon covers entire amount
+    if (total === 0 || data.paymentMethod === "FREE_COUPON") {
+      if (total > 0 && data.paymentMethod === "FREE_COUPON") {
+        return NextResponse.json({ error: "Pagamento gratuito nao permitido para este valor" }, { status: 400 })
+      }
+
+      const freeOrder = await prisma.order.create({
+        data: {
+          userId: session.user.id,
+          status: "PAID",
+          paymentMethod: "FREE_COUPON",
+          total: 0,
+          discount,
+          couponId,
+          customerEmail: data.customerEmail || session.user.email,
+          customerName: data.customerName || session.user.name,
+          customerCpf: data.customerCpf,
+          paidAt: new Date(),
+          items: { create: orderItems },
+        },
+      })
+
+      await processSuccessfulPayment(freeOrder.id)
+
+      return NextResponse.json({
+        orderId: freeOrder.id,
+        paymentMethod: "FREE_COUPON",
+        status: "approved",
+      })
+    }
+
     // Create order
-    const order = await prisma.order.create({
+    order = await prisma.order.create({
       data: {
         userId: session.user.id,
         status: "PENDING",
@@ -69,7 +101,7 @@ export async function POST(request: Request) {
     })
 
     // Process payment
-    const description = `Livraria Digital - Pedido #${order.id.slice(0, 8)}`
+    const description = `筆言葉 Fude kotoba - Pedido #${order.id.slice(0, 8)}`
 
     switch (data.paymentMethod) {
       case "PIX": {
@@ -147,6 +179,12 @@ export async function POST(request: Request) {
     }
   } catch (error: unknown) {
     console.error("Checkout error:", error)
+    if (order?.id) {
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { status: "CANCELLED" },
+      }).catch(() => {})
+    }
     return NextResponse.json({ error: "Erro no checkout" }, { status: 500 })
   }
 }

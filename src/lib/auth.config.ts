@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
+import { isStaff } from "./permissions"
 
 export const authConfig: NextAuthConfig = {
   session: { strategy: "jwt" },
@@ -39,7 +40,7 @@ export const authConfig: NextAuthConfig = {
       const isAdminPath = adminPaths.some((path) => pathname.startsWith(path))
 
       if (isAdminPath) {
-        if (!isLoggedIn || auth?.user?.role !== "ADMIN") return false
+        if (!isLoggedIn || !isStaff(auth?.user?.role)) return false
         return true
       }
 

@@ -1,8 +1,8 @@
 import { RegisterForm } from "@/components/auth/RegisterForm"
 
 export const metadata = {
-  title: "Cadastro | Livraria Digital",
-  description: "Crie sua conta na Livraria Digital",
+  title: "Cadastro | 筆言葉 Fude kotoba",
+  description: "Crie sua conta na 筆言葉 Fude kotoba",
 }
 
 export default function RegisterPage() {

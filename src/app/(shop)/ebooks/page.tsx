@@ -4,6 +4,7 @@ import { EbookGrid } from "@/components/ebooks/EbookGrid"
 import { CatalogFilters } from "@/components/ebooks/CatalogFilters"
 import { SearchBar } from "@/components/ebooks/SearchBar"
 import type { Prisma } from "@/generated/prisma/client"
+import { HotmartInline } from "@/components/marketing/HotmartInline"
 
 export const dynamic = "force-dynamic"
 
@@ -99,6 +100,40 @@ export default async function EbooksPage({ searchParams }: Props) {
     prisma.ebook.count({ where }),
   ])
 
+  let partnerAds: { id: string; title: string; targetUrl: string; price: number | null; coverImageUrl: string | null }[] = []
+  try {
+    partnerAds = await prisma.hotmartAd.findMany({
+      where: { active: true, productType: "ebook" },
+      select: {
+        id: true,
+        title: true,
+        targetUrl: true,
+        price: true,
+        coverImageUrl: true,
+      },
+    })
+  } catch {
+    // HotmartAd table may not have new columns yet (migration pending)
+  }
+
+  const partnerItems = partnerAds.map((ad) => ({
+    id: `partner-${ad.id}`,
+    title: ad.title,
+    slug: ad.id,
+    author: "Parceiro Hotmart",
+    price: ad.price || 0,
+    originalPrice: null,
+    coverUrl: ad.coverImageUrl,
+    category: "Parceiro",
+    avgRating: 0,
+    reviewCount: 0,
+    featured: false,
+    isPartner: true as const,
+    partnerUrl: ad.targetUrl,
+  }))
+
+  const allEbooks = [...ebooks, ...partnerItems]
+
   const totalPages = Math.ceil(total / perPage)
 
   return (
@@ -117,7 +152,8 @@ export default async function EbooksPage({ searchParams }: Props) {
         <Suspense>
           <CatalogFilters />
         </Suspense>
-        <EbookGrid ebooks={ebooks} />
+        <EbookGrid ebooks={allEbooks} />
+        <HotmartInline />
 
         {totalPages > 1 && (
           <div className="flex justify-center gap-2 pt-8">

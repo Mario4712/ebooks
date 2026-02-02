@@ -1,3 +1,4 @@
+import "dotenv/config"
 import { PrismaClient } from "../src/generated/prisma/client"
 import { PrismaPg } from "@prisma/adapter-pg"
 import bcrypt from "bcryptjs"
@@ -464,8 +465,20 @@ async function main() {
     },
   })
 
+  await prisma.coupon.upsert({
+    where: { code: "GRATIS100" },
+    update: {},
+    create: {
+      code: "GRATIS100",
+      discountType: "PERCENTAGE",
+      discountValue: 100,
+      maxUses: 10000,
+      active: true,
+    },
+  })
+
   console.log("Seed completed successfully!")
-  console.log(`Created: ${ebooks.length} ebooks, 4 users, 2 coupons, reviews`)
+  console.log(`Created: ${ebooks.length} ebooks, 4 users, 3 coupons, reviews`)
 }
 
 main()

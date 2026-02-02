@@ -24,13 +24,13 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             justifyContent: "center",
             width: "100%",
             height: "100%",
-            backgroundColor: "#1E3A8A",
+            backgroundColor: "#1D3557",
             color: "white",
             fontSize: 48,
             fontFamily: "serif",
           }}
         >
-          Livraria Digital
+          筆言葉 Fude kotoba
         </div>
       ),
       { ...size }
@@ -50,7 +50,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           flexDirection: "column",
           width: "100%",
           height: "100%",
-          backgroundColor: "#1E3A8A",
+          backgroundColor: "#1D3557",
           color: "white",
           padding: 60,
           fontFamily: "serif",
@@ -67,7 +67,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           <div
             style={{
               fontSize: 24,
-              color: "#F59E0B",
+              color: "#F4A261",
               marginBottom: 16,
               textTransform: "uppercase",
               letterSpacing: 2,
@@ -100,7 +100,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               style={{
                 fontSize: 40,
                 fontWeight: 700,
-                color: "#F59E0B",
+                color: "#F4A261",
               }}
             >
               {formattedPrice}
@@ -116,7 +116,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             paddingTop: 24,
           }}
         >
-          <div style={{ fontSize: 24, fontWeight: 600 }}>Livraria Digital</div>
+          <div style={{ fontSize: 24, fontWeight: 600 }}>筆言葉 Fude kotoba</div>
           <div style={{ fontSize: 18, opacity: 0.6 }}>
             PDF &bull; EPUB &bull; MOBI
           </div>

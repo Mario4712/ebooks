@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { createLog, LogAction, LogResource } from "@/lib/audit"
+import { requirePermission } from "@/lib/permissions"
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth()
-  if (session?.user?.role !== "ADMIN") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  const denied = requirePermission(session, "ebook", "view")
+  if (denied) return denied
 
   const { id } = await params
   const ebook = await prisma.ebook.findUnique({ where: { id } })
@@ -20,11 +23,23 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth()
-  if (session?.user?.role !== "ADMIN") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  const denied = requirePermission(session, "ebook", "update")
+  if (denied) return denied
 
   const { id } = await params
   const data = await request.json()
   const ebook = await prisma.ebook.update({ where: { id }, data })
+
+  await createLog({
+    userId: session!.user!.id!,
+    action: LogAction.UPDATE,
+    resource: LogResource.EBOOK,
+    resourceId: id,
+    description: `Ebook atualizado: ${ebook.title}`,
+    changedFields: Object.keys(data),
+    request,
+  })
+
   return NextResponse.json(ebook)
 }
 
@@ -33,9 +48,20 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth()
-  if (session?.user?.role !== "ADMIN") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  const denied = requirePermission(session, "ebook", "delete")
+  if (denied) return denied
 
   const { id } = await params
   await prisma.ebook.delete({ where: { id } })
+
+  await createLog({
+    userId: session!.user!.id!,
+    action: LogAction.DELETE,
+    resource: LogResource.EBOOK,
+    resourceId: id,
+    description: "Ebook excluido",
+    request: _request,
+  })
+
   return NextResponse.json({ success: true })
 }

@@ -2,9 +2,9 @@
 
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
-import { ShoppingCart, User, Menu, Search, BookOpen, LogOut, Settings, Package, Heart } from "lucide-react"
+import { ShoppingCart, User, Menu, Search, BookOpen, LogOut, Settings, Package, Heart, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useCartStore } from "@/stores/cart"
 import { CartDrawer } from "@/components/cart/CartDrawer"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
+import { cn } from "@/lib/utils"
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -26,8 +27,20 @@ const navLinks = [
 export function Header() {
   const { data: session } = useSession()
   const itemCount = useCartStore((s) => s.items.length)
+  const clearCart = useCartStore((s) => s.clearCart)
   const [cartOpen, setCartOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [cartBounce, setCartBounce] = useState(false)
+  const prevCount = useRef(itemCount)
+
+  useEffect(() => {
+    if (itemCount > prevCount.current) {
+      setCartBounce(true)
+      const timer = setTimeout(() => setCartBounce(false), 600)
+      return () => clearTimeout(timer)
+    }
+    prevCount.current = itemCount
+  }, [itemCount])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -40,6 +53,7 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64">
+              <SheetTitle className="sr-only">Menu de navegacao</SheetTitle>
               <nav className="flex flex-col gap-4 mt-8">
                 {navLinks.map((link) => (
                   <Link
@@ -57,7 +71,7 @@ export function Header() {
 
           <Link href="/" className="flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-primary" />
-            <span className="font-serif text-xl font-bold hidden sm:inline">Livraria Digital</span>
+            <span className="font-serif text-xl font-bold hidden sm:inline">筆言葉 Fude kotoba</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
@@ -82,16 +96,17 @@ export function Header() {
 
           <Sheet open={cartOpen} onOpenChange={setCartOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className={cn("relative", cartBounce && "animate-bounce")}>
                 <ShoppingCart className="h-5 w-5" />
                 {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center" style={{ animation: cartBounce ? 'badge-pop 0.3s ease-out' : undefined }}>
                     {itemCount}
                   </span>
                 )}
               </Button>
             </SheetTrigger>
             <SheetContent className="w-full sm:max-w-lg">
+              <SheetTitle className="sr-only">Carrinho de compras</SheetTitle>
               <CartDrawer onClose={() => setCartOpen(false)} />
             </SheetContent>
           </Sheet>
@@ -119,18 +134,21 @@ export function Header() {
                   <Link href="/favoritos"><Heart className="mr-2 h-4 w-4" />Favoritos</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/configuracoes"><Settings className="mr-2 h-4 w-4" />Configurações</Link>
+                  <Link href="/configuracoes"><Settings className="mr-2 h-4 w-4" />Configuracoes</Link>
                 </DropdownMenuItem>
-                {session.user.role === "ADMIN" && (
+                {session.user.role && session.user.role !== "USER" && (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin">Painel Admin</Link>
+                    <DropdownMenuItem asChild className="bg-primary/5">
+                      <Link href="/admin" className="font-medium">
+                        <Shield className="mr-2 h-4 w-4 text-primary" />
+                        Painel Admin
+                      </Link>
                     </DropdownMenuItem>
                   </>
                 )}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()}>
+                <DropdownMenuItem onClick={() => { clearCart(); signOut() }}>
                   <LogOut className="mr-2 h-4 w-4" />Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>

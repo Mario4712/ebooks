@@ -1,19 +1,23 @@
 import { EbookCard } from "./EbookCard"
 
+export interface EbookGridItem {
+  id: string
+  title: string
+  slug: string
+  author: string
+  price: number
+  originalPrice?: number | null
+  coverUrl?: string | null
+  category: string
+  avgRating: number
+  reviewCount: number
+  featured: boolean
+  isPartner?: boolean
+  partnerUrl?: string
+}
+
 interface EbookGridProps {
-  ebooks: {
-    id: string
-    title: string
-    slug: string
-    author: string
-    price: number
-    originalPrice?: number | null
-    coverUrl?: string | null
-    category: string
-    avgRating: number
-    reviewCount: number
-    featured: boolean
-  }[]
+  ebooks: EbookGridItem[]
 }
 
 export function EbookGrid({ ebooks }: EbookGridProps) {
@@ -29,7 +33,12 @@ export function EbookGrid({ ebooks }: EbookGridProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {ebooks.map((ebook) => (
-        <EbookCard key={ebook.id} ebook={ebook} />
+        <EbookCard
+          key={ebook.id}
+          ebook={ebook}
+          isPartner={ebook.isPartner}
+          partnerUrl={ebook.partnerUrl}
+        />
       ))}
     </div>
   )

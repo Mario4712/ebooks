@@ -11,11 +11,10 @@ export function HotmartSidebar() {
   const [ad, setAd] = useState<Ad | null>(null)
 
   useEffect(() => {
-    fetch("/api/admin/hotmart")
+    fetch("/api/hotmart?position=sidebar")
       .then((r) => r.json())
       .then((ads: Ad[]) => {
-        const sidebar = ads.find((a: any) => a.position === "sidebar" && a.active)
-        if (sidebar) setAd(sidebar)
+        if (ads.length > 0) setAd(ads[0])
       })
       .catch(() => {})
   }, [])

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -40,19 +39,7 @@ export function RegisterForm() {
         return
       }
 
-      const result = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        router.push("/login")
-        return
-      }
-
-      router.push("/")
-      router.refresh()
+      router.push("/login?registered=true")
     } catch {
       setError("Erro ao criar conta")
     } finally {

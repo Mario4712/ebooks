@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, CheckCircle, Mail, MapPin, Clock } from "lucide-react"
+import { Loader2, CheckCircle, Mail, MapPin, Clock, Phone, MessageCircle } from "lucide-react"
 import { toast } from "sonner"
 
 export default function ContatoPage() {
@@ -47,7 +47,7 @@ export default function ContatoPage() {
         <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-6" />
         <h1 className="font-serif text-3xl font-bold mb-4">Mensagem Enviada!</h1>
         <p className="text-muted-foreground text-lg">
-          Obrigado pelo contato. Responderemos o mais breve possível.
+          Obrigado pelo contato. Responderemos o mais breve possivel.
         </p>
       </div>
     )
@@ -57,7 +57,7 @@ export default function ContatoPage() {
     <div className="container mx-auto px-4 py-16 max-w-5xl">
       <h1 className="font-serif text-4xl font-bold mb-2">Fale Conosco</h1>
       <p className="text-muted-foreground text-lg mb-10">
-        Tem alguma dúvida, sugestão ou problema? Estamos aqui para ajudar.
+        Tem alguma duvida, sugestao ou problema? Estamos aqui para ajudar.
       </p>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -118,7 +118,30 @@ export default function ContatoPage() {
           </Card>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
+          <a
+            href="https://wa.me/5511999999999?text=Ola! Gostaria de saber mais sobre os e-books"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <Card className="hover:shadow-md transition-shadow border-green-200 hover:border-green-300">
+              <CardContent className="p-6">
+                <MessageCircle className="h-6 w-6 text-green-600 mb-3" />
+                <h3 className="font-semibold mb-1">WhatsApp</h3>
+                <p className="text-sm text-green-600 font-medium">(11) 99999-9999</p>
+                <p className="text-xs text-muted-foreground mt-1">Atendimento rapido via mensagem</p>
+              </CardContent>
+            </Card>
+          </a>
+          <Card>
+            <CardContent className="p-6">
+              <Phone className="h-6 w-6 text-primary mb-3" />
+              <h3 className="font-semibold mb-1">Telefone</h3>
+              <a href="tel:+551130000000" className="text-sm text-primary hover:underline">(11) 3000-0000</a>
+              <p className="text-xs text-muted-foreground mt-1">Seg-Sex, 9h as 18h</p>
+            </CardContent>
+          </Card>
           <Card>
             <CardContent className="p-6">
               <Mail className="h-6 w-6 text-primary mb-3" />
@@ -129,15 +152,15 @@ export default function ContatoPage() {
           <Card>
             <CardContent className="p-6">
               <Clock className="h-6 w-6 text-primary mb-3" />
-              <h3 className="font-semibold mb-1">Horário de Atendimento</h3>
-              <p className="text-sm text-muted-foreground">Segunda a Sexta, 9h às 18h</p>
+              <h3 className="font-semibold mb-1">Horario de Atendimento</h3>
+              <p className="text-sm text-muted-foreground">Segunda a Sexta, 9h as 18h</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-6">
               <MapPin className="h-6 w-6 text-primary mb-3" />
-              <h3 className="font-semibold mb-1">Localização</h3>
-              <p className="text-sm text-muted-foreground">São Paulo, SP - Brasil</p>
+              <h3 className="font-semibold mb-1">Localizacao</h3>
+              <p className="text-sm text-muted-foreground">Sao Paulo, SP - Brasil</p>
             </CardContent>
           </Card>
         </div>

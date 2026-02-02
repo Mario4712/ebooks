@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { formatPrice } from "@/lib/utils"
 import { Plus } from "lucide-react"
 import Link from "next/link"
+import { EbookActions } from "@/components/admin/EbookActions"
 
 export const dynamic = "force-dynamic"
 
@@ -43,9 +44,12 @@ export default async function AdminEbooksPage() {
               <TableCell>{ebook.salesCount}</TableCell>
               <TableCell><Badge variant={ebook.status === "PUBLISHED" ? "default" : "secondary"}>{ebook.status}</Badge></TableCell>
               <TableCell>
-                <Link href={`/admin/ebooks/${ebook.id}/editar`}>
-                  <Button size="sm" variant="outline">Editar</Button>
-                </Link>
+                <div className="flex items-center gap-1">
+                  <Link href={`/admin/ebooks/${ebook.id}/editar`}>
+                    <Button size="sm" variant="outline">Editar</Button>
+                  </Link>
+                  <EbookActions ebookId={ebook.id} />
+                </div>
               </TableCell>
             </TableRow>
           ))}

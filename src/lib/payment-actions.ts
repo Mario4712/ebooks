@@ -12,13 +12,33 @@ export async function processSuccessfulPayment(orderId: string) {
     },
   })
 
-  if (!order || order.status === "PAID") return
+  if (!order) return
 
-  // Update order status
-  await prisma.order.update({
-    where: { id: orderId },
-    data: { status: "PAID", paidAt: new Date() },
-  })
+  const alreadyPaid = order.status === "PAID"
+
+  if (!alreadyPaid) {
+    // Update order status
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status: "PAID", paidAt: new Date() },
+    })
+
+    // Record coupon usage
+    if (order.couponId) {
+      await prisma.coupon.update({
+        where: { id: order.couponId },
+        data: { usedCount: { increment: 1 } },
+      })
+
+      await prisma.couponUsage.create({
+        data: {
+          couponId: order.couponId,
+          userId: order.userId,
+          orderId: order.id,
+        },
+      }).catch(() => {})
+    }
+  }
 
   // Increment sales counts
   for (const item of order.items) {
@@ -26,22 +46,6 @@ export async function processSuccessfulPayment(orderId: string) {
       where: { id: item.ebookId },
       data: { salesCount: { increment: 1 } },
     })
-  }
-
-  // Record coupon usage
-  if (order.couponId) {
-    await prisma.coupon.update({
-      where: { id: order.couponId },
-      data: { usedCount: { increment: 1 } },
-    })
-
-    await prisma.couponUsage.create({
-      data: {
-        couponId: order.couponId,
-        userId: order.userId,
-        orderId: order.id,
-      },
-    }).catch(() => {})
   }
 
   // Generate download tokens

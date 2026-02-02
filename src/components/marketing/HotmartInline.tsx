@@ -15,17 +15,17 @@ export function HotmartInline() {
   const [ad, setAd] = useState<HotmartAd | null>(null)
 
   useEffect(() => {
-    fetch("/api/admin/hotmart?position=INLINE&active=true")
+    fetch("/api/hotmart?position=inline")
       .then((res) => res.json())
-      .then((data) => {
-        if (data.ads?.length > 0) {
-          setAd(data.ads[Math.floor(Math.random() * data.ads.length)])
+      .then((ads: HotmartAd[]) => {
+        if (ads.length > 0) {
+          setAd(ads[Math.floor(Math.random() * ads.length)])
         }
       })
       .catch(() => {})
   }, [])
 
-  if (!ad) return null
+  if (!ad || !ad.targetUrl) return null
 
   const handleClick = () => {
     fetch("/api/hotmart/click", {
@@ -44,9 +44,15 @@ export function HotmartInline() {
       className="block my-6 rounded-lg border bg-muted/50 overflow-hidden hover:shadow-md transition-shadow"
     >
       <div className="flex items-center gap-4 p-4">
-        <div className="relative h-20 w-20 flex-shrink-0 rounded overflow-hidden">
-          <Image src={ad.imageUrl} alt={ad.title} fill className="object-cover" />
-        </div>
+        {ad.imageUrl ? (
+          <div className="relative h-20 w-20 flex-shrink-0 rounded overflow-hidden">
+            <Image src={ad.imageUrl} alt={ad.title} fill className="object-cover" />
+          </div>
+        ) : (
+          <div className="h-20 w-20 flex-shrink-0 rounded bg-muted flex items-center justify-center">
+            <ExternalLink className="h-6 w-6 text-muted-foreground" />
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Patrocinado</p>
           <p className="font-medium truncate">{ad.title}</p>

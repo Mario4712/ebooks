@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
-  LayoutDashboard, BookOpen, Package, Users, Tag, Star, Settings, Megaphone, ArrowLeft,
+  LayoutDashboard, BookOpen, Package, Users, Tag, Star, Settings, Megaphone, ArrowLeft, ImageIcon, ScrollText, UserCog,
 } from "lucide-react"
 
 const links = [
@@ -13,9 +13,12 @@ const links = [
   { href: "/admin/pedidos", label: "Pedidos", icon: Package },
   { href: "/admin/clientes", label: "Clientes", icon: Users },
   { href: "/admin/cupons", label: "Cupons", icon: Tag },
-  { href: "/admin/avaliacoes", label: "Avaliações", icon: Star },
+  { href: "/admin/avaliacoes", label: "Avaliacoes", icon: Star },
   { href: "/admin/hotmart", label: "Hotmart Ads", icon: Megaphone },
-  { href: "/admin/configuracoes", label: "Configurações", icon: Settings },
+  { href: "/admin/equipe", label: "Equipe", icon: UserCog },
+  { href: "/admin/midias", label: "Midias", icon: ImageIcon },
+  { href: "/admin/logs", label: "Logs", icon: ScrollText },
+  { href: "/admin/configuracoes", label: "Configuracoes", icon: Settings },
 ]
 
 export function AdminSidebar() {

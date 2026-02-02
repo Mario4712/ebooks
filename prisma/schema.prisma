@@ -9,7 +9,17 @@ datasource db {
 
 enum Role {
   USER
+  INTERN
+  ANALYST
+  SUPPORT
+  LOGISTICS
+  MARKETING
+  FINANCE
+  MODERATOR
+  EDITOR
+  MANAGER
   ADMIN
+  SUPER_ADMIN
 }
 
 enum EbookStatus {
@@ -31,11 +41,19 @@ enum PaymentMethod {
   PIX
   CREDIT_CARD
   CRYPTO
+  FREE_COUPON
+  MANUAL
 }
 
 enum DiscountType {
   PERCENTAGE
   FIXED
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
 }
 
 model User {
@@ -47,8 +65,20 @@ model User {
   password      String?
   cpf           String?   @unique
   phone         String?
-  role          Role      @default(USER)
-  newsletter    Boolean   @default(false)
+  role          Role       @default(USER)
+  status        UserStatus @default(ACTIVE)
+  newsletter    Boolean    @default(false)
+
+  // Employee fields
+  level             Int?
+  managerId         String?
+  manager           User?     @relation("UserManager", fields: [managerId], references: [id])
+  subordinates      User[]    @relation("UserManager")
+  employeeCode      String?   @unique
+  hireDate          DateTime?
+  terminationDate   DateTime?
+  customPermissions String[]
+
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
@@ -57,6 +87,7 @@ model User {
   reviews       Review[]
   favorites     Favorite[]
   downloads     Download[]
+  activityLogs  ActivityLog[]
 }
 
 model Account {
@@ -237,17 +268,20 @@ model CouponUsage {
 }
 
 model HotmartAd {
-  id          String        @id @default(cuid())
-  title       String
-  description String?
-  imageUrl    String?
-  targetUrl   String
-  position    String
-  active      Boolean       @default(true)
-  clickCount  Int           @default(0)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  clicks      HotmartClick[]
+  id            String        @id @default(cuid())
+  title         String
+  description   String?
+  imageUrl      String?
+  targetUrl     String
+  position      String
+  active        Boolean       @default(true)
+  clickCount    Int           @default(0)
+  productType   String?
+  price         Float?
+  coverImageUrl String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  clicks        HotmartClick[]
 }
 
 model HotmartClick {
@@ -260,4 +294,65 @@ model HotmartClick {
   ad        HotmartAd @relation(fields: [adId], references: [id], onDelete: Cascade)
 
   @@index([adId])
+}
+
+enum LogAction {
+  CREATE
+  UPDATE
+  DELETE
+  APPROVE
+  REJECT
+  TOGGLE
+  LOGIN
+  EXPORT
+}
+
+enum LogResource {
+  EBOOK
+  ORDER
+  COUPON
+  REVIEW
+  HOTMART_AD
+  USER
+  SYSTEM
+}
+
+model ActivityLog {
+  id            String      @id @default(cuid())
+  userId        String?
+  action        LogAction
+  resource      LogResource
+  resourceId    String?
+  description   String?
+  ip            String?
+  userAgent     String?
+  method        String?
+  endpoint      String?
+  statusCode    Int?
+  metadata      Json?
+  changedFields String[]
+  errorMessage  String?
+  duration      Int?
+  createdAt     DateTime    @default(now())
+  user          User?       @relation(fields: [userId], references: [id])
+
+  @@index([resource, resourceId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+}
+
+model DailyMetrics {
+  id          String   @id @default(cuid())
+  date        DateTime @unique @db.Date
+  totalLogs   Int      @default(0)
+  creates     Int      @default(0)
+  updates     Int      @default(0)
+  deletes     Int      @default(0)
+  errors      Int      @default(0)
+  uniqueUsers Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
 }

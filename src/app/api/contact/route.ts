@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
     if (resend) {
       await resend.emails.send({
-        from: `Livraria Digital <${process.env.EMAIL_FROM || "noreply@livrariadigital.com"}>`,
+        from: `筆言葉 Fude kotoba <${process.env.EMAIL_FROM || "noreply@livrariadigital.com"}>`,
         to: process.env.CONTACT_EMAIL || "contato@livrariadigital.com",
         subject: `[Contato] ${data.subject}`,
         text: `Nome: ${data.name}\nE-mail: ${data.email}\n\nMensagem:\n${data.message}`,

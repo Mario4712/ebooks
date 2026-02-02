@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/accordion"
 
 export const metadata: Metadata = {
-  title: "Perguntas Frequentes | Livraria Digital",
-  description: "Respostas para as perguntas mais frequentes sobre a Livraria Digital.",
+  title: "Perguntas Frequentes | 筆言葉 Fude kotoba",
+  description: "Respostas para as perguntas mais frequentes sobre a 筆言葉 Fude kotoba.",
 }
 
 const faqs = [
@@ -20,7 +20,7 @@ const faqs = [
         a: "Aceitamos PIX (pagamento instantâneo), cartão de crédito (via Mercado Pago, com opção de parcelamento) e criptomoedas (Bitcoin, Ethereum e outras, via Coinbase Commerce).",
       },
       {
-        q: "É seguro comprar na Livraria Digital?",
+        q: "É seguro comprar na 筆言葉 Fude kotoba?",
         a: "Sim! Todos os pagamentos são processados por plataformas renomadas (Mercado Pago e Coinbase Commerce). Não armazenamos dados de cartão de crédito em nossos servidores.",
       },
       {
@@ -99,7 +99,7 @@ export default function FaqPage() {
     <div className="container mx-auto px-4 py-16 max-w-3xl">
       <h1 className="font-serif text-4xl font-bold mb-2">Perguntas Frequentes</h1>
       <p className="text-muted-foreground text-lg mb-10">
-        Encontre respostas para as dúvidas mais comuns sobre a Livraria Digital.
+        Encontre respostas para as dúvidas mais comuns sobre a 筆言葉 Fude kotoba.
       </p>
 
       <div className="space-y-8">

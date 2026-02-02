@@ -3,7 +3,7 @@
 import { ShoppingCart, Check } from "lucide-react"
 import { useCartStore, type CartItem } from "@/stores/cart"
 import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
+import { showCartToast, showCartDuplicateToast } from "./CartToast"
 
 interface AddToCartButtonProps {
   item: CartItem
@@ -16,9 +16,12 @@ export function AddToCartButton({ item, size = "default", className }: AddToCart
   const inCart = hasItem(item.id)
 
   function handleAdd() {
-    if (inCart) return
+    if (inCart) {
+      showCartDuplicateToast(item.title)
+      return
+    }
     addItem(item)
-    toast.success("Adicionado ao carrinho", { description: item.title })
+    showCartToast({ title: item.title, price: item.price, coverUrl: item.coverUrl })
   }
 
   return (

@@ -10,11 +10,10 @@ export function HotmartBanner() {
   const [ad, setAd] = useState<Ad | null>(null)
 
   useEffect(() => {
-    fetch("/api/admin/hotmart")
+    fetch("/api/hotmart?position=banner")
       .then((r) => r.json())
       .then((ads: Ad[]) => {
-        const banner = ads.find((a: any) => a.position === "banner" && a.active)
-        if (banner) setAd(banner)
+        if (ads.length > 0) setAd(ads[0])
       })
       .catch(() => {})
   }, [])

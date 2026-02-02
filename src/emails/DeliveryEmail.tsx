@@ -31,7 +31,7 @@ export function DeliveryEmail({ customerName, orderId, items, appUrl }: Delivery
               key={format.format}
               href={`${appUrl}/api/download/${format.token}`}
               style={{
-                backgroundColor: "#1E3A8A",
+                backgroundColor: "#E63946",
                 color: "#ffffff",
                 padding: "8px 16px",
                 borderRadius: "4px",
@@ -55,7 +55,7 @@ export function DeliveryEmail({ customerName, orderId, items, appUrl }: Delivery
       <Button
         href={`${appUrl}/biblioteca`}
         style={{
-          backgroundColor: "#F59E0B",
+          backgroundColor: "#F4A261",
           color: "#000000",
           padding: "12px 24px",
           borderRadius: "6px",

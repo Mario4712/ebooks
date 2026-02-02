@@ -13,15 +13,15 @@ export function BaseLayout({ preview, children }: BaseLayoutProps) {
       <Body style={{ backgroundColor: "#f6f9fc", fontFamily: "Inter, Arial, sans-serif" }}>
         <Container style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
           <Section style={{ backgroundColor: "#ffffff", borderRadius: "8px", padding: "32px" }}>
-            <Text style={{ fontSize: "24px", fontWeight: "bold", color: "#1E3A8A", marginBottom: "24px" }}>
-              Livraria Digital
+            <Text style={{ fontSize: "24px", fontWeight: "bold", color: "#1D3557", marginBottom: "24px" }}>
+              筆言葉 Fude kotoba
             </Text>
             {children}
           </Section>
           <Section style={{ textAlign: "center" as const, padding: "16px" }}>
             <Hr />
             <Text style={{ fontSize: "12px", color: "#999" }}>
-              © {new Date().getFullYear()} Livraria Digital. Todos os direitos reservados.
+              &copy; {new Date().getFullYear()} 筆言葉 Fude kotoba. Todos os direitos reservados.
             </Text>
           </Section>
         </Container>

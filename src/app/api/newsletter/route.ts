@@ -32,9 +32,9 @@ export async function POST(request: Request) {
 
     if (resend) {
       await resend.emails.send({
-        from: `Livraria Digital <${process.env.EMAIL_FROM || "noreply@livrariadigital.com"}>`,
+        from: `筆言葉 Fude kotoba <${process.env.EMAIL_FROM || "noreply@livrariadigital.com"}>`,
         to: email,
-        subject: "Bem-vindo à Livraria Digital!",
+        subject: "Bem-vindo à 筆言葉 Fude kotoba!",
         react: WelcomeEmail({ name: existing?.name || "Leitor" }),
       })
     }

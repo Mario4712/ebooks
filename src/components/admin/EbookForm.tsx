@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import { slugify } from "@/lib/utils"
+import { ImageUpload } from "@/components/admin/ImageUpload"
 
 const categories = [
   "Programação", "Marketing Digital", "Empreendedorismo",
@@ -56,6 +57,7 @@ export function EbookForm({ ebook }: EbookFormProps) {
   const [publisher, setPublisher] = useState(ebook?.publisher || "")
   const [status, setStatus] = useState(ebook?.status || "DRAFT")
   const [featured, setFeatured] = useState(ebook?.featured || false)
+  const [coverUrl, setCoverUrl] = useState("")
 
   function handleTitleChange(value: string) {
     setTitle(value)
@@ -74,6 +76,7 @@ export function EbookForm({ ebook }: EbookFormProps) {
       pages: pages ? parseInt(pages) : null,
       isbn: isbn || null, publisher: publisher || null,
       status, featured,
+      coverUrl: coverUrl || null,
     }
 
     try {
@@ -180,6 +183,16 @@ export function EbookForm({ ebook }: EbookFormProps) {
               </SelectContent>
             </Select>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Imagem de Capa</CardTitle></CardHeader>
+        <CardContent>
+          <ImageUpload
+            onUpload={(url) => setCoverUrl(url)}
+            currentUrl={coverUrl}
+          />
         </CardContent>
       </Card>
 

@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       case "charge:failed":
         await prisma.order.update({
           where: { id: orderId },
-          data: { status: "FAILED" },
+          data: { status: "CANCELLED" },
         })
         break
     }

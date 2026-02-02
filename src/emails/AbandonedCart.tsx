@@ -49,7 +49,7 @@ export function AbandonedCart({ name, items, total, couponCode }: AbandonedCartP
       <Button
         href={`${appUrl}/carrinho`}
         style={{
-          backgroundColor: "#1E3A8A",
+          backgroundColor: "#E63946",
           color: "#ffffff",
           padding: "12px 24px",
           borderRadius: "6px",

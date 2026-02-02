@@ -1,8 +1,8 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Política de Privacidade | Livraria Digital",
-  description: "Política de Privacidade da Livraria Digital - Conheça como tratamos seus dados pessoais.",
+  title: "Política de Privacidade | 筆言葉 Fude kotoba",
+  description: "Política de Privacidade da 筆言葉 Fude kotoba - Conheça como tratamos seus dados pessoais.",
 }
 
 export default function PrivacidadePage() {
@@ -15,7 +15,7 @@ export default function PrivacidadePage() {
         <section>
           <h2 className="font-serif text-2xl font-bold mb-3">1. Introdução</h2>
           <p className="text-muted-foreground leading-relaxed">
-            A Livraria Digital está comprometida com a proteção da privacidade dos seus usuários.
+            A 筆言葉 Fude kotoba está comprometida com a proteção da privacidade dos seus usuários.
             Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos
             seus dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).
           </p>
